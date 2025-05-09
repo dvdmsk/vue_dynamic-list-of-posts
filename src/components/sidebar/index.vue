@@ -1,0 +1,15 @@
+<script setup>
+import './index.css';
+</script>
+
+<template>
+  <div className="tile is-parent is-8-desktop Sidebar Sidebar--open">
+    <div className="tile is-child box is-success ">
+      <div className="tile is-child box is-success ">
+        <div className="content">
+          <!-- Content here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
