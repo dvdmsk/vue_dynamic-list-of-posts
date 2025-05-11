@@ -27,18 +27,18 @@ const handleSubmit = async () => {
   }
 
   if (title.value && body.value) {
-    let newPost;
     try {
       isLoading.value = true;
-      newPost = await editPost(selectedPost.id, {
+      const newPost = await editPost(selectedPost.id, {
         userId: user.id,
         title: title.value,
         body: body.value,
       });
+      setSelectedPost(newPost);
     } catch {
     } finally {
       isLoading.value = false;
-      setSelectedPost(newPost);
+      
     }
   }
 };

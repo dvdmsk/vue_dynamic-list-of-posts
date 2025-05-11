@@ -11,20 +11,20 @@ const isLoading = ref(false);
 const isError = ref(false);
 
 const handleSubmit = async () => {
-  try {
-    isLoading.value = true;
-    const res = isError.value
-      ? await createUser({ email: email.value, name: name.value })
-      : await getUserByEmail(email.value);
+  isLoading.value = true;
+  isError.value = false;
 
-    if (!res || (Array.isArray(res) && res.length === 0)) {
-      throw new Error("0");
+  try {
+    let user = await getUserByEmail(email.value);
+
+    if (!user || (Array.isArray(user) && user.length === 0)) {
+      user = await createUser({ email: email.value, name: name.value });
     }
 
-    if (Array.isArray(res)) {
-      emit("login", res[0]);
+    if (Array.isArray(user)) {
+      emit("login", user[0]);
     } else {
-      emit('login', res);
+      emit("login", user);
     }
   } catch (error) {
     isError.value = true;
@@ -32,6 +32,7 @@ const handleSubmit = async () => {
     isLoading.value = false;
   }
 };
+
 </script>
 <template>
   <section class="container is-flex is-justify-content-center">

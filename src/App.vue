@@ -9,21 +9,25 @@ import { useUserStore } from "./store/storeUser";
 const userStore = useUserStore();
 
 onMounted(() => {
-  const res = JSON.parse(localStorage.getItem('user'));
+  const res = JSON.parse(localStorage.getItem("user"));
 
   if (res) {
     userStore.setUser(res);
   }
 });
 
-const setUser = async (userValue) => {
-  userStore.setUser(userValue || []);
-  localStorage.setItem('user', JSON.stringify(userValue));
+const setUser = (userValue) => {
+  userStore.setUser(userValue || null);
+  localStorage.setItem('user', JSON.stringify(userValue || null));
 };
+
 </script>
 
 <template>
-  <Login v-if="!userStore.user || userStore.user.length === 0" @login="setUser" />
+  <Login
+    v-if="!userStore.user || Object.keys(userStore.user).length === 0"
+    @login="setUser"
+  />
 
   <template v-else>
     <Header @logout="setUser" />
