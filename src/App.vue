@@ -25,7 +25,7 @@ const setUser = (userValue) => {
 
 <template>
   <Login
-    v-if="!userStore.user || Object.keys(userStore.user).length === 0"
+    v-if="!userStore.user || !userStore.user.email"
     @login="setUser"
   />
 

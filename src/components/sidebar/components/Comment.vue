@@ -5,8 +5,10 @@ const { email, name, body, id } = comment;
 
 const emit = defineEmits(["delete"]);
 const handleDelete = async () => {
-  await deleteComment(id);
-  emit("delete");
+  try {
+    await deleteComment(id);
+    emit("delete");
+  } catch {}
 };
 </script>
 
