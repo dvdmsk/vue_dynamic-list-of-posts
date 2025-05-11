@@ -1,10 +1,33 @@
 <script setup>
-import Header from './components/Header.vue';
-import Main from './components/Main.vue';
+import { onMounted, ref, watch } from "vue";
+import Header from "./components/Header.vue";
+import Main from "./components/Main.vue";
+import Login from "./components/Login.vue";
+import { getUserByEmail } from "./api/user";
+import { useUserStore } from "./store/storeUser";
+
+const userStore = useUserStore();
+
+onMounted(() => {
+  const res = JSON.parse(localStorage.getItem('user'));
+
+  if (res) {
+    userStore.setUser(res);
+  }
+});
+
+const setUser = async (userValue) => {
+  userStore.setUser(userValue || []);
+  localStorage.setItem('user', JSON.stringify(userValue));
+};
 </script>
 
 <template>
-  <Header />
-  
-  <Main />
+  <Login v-if="!userStore.user || userStore.user.length === 0" @login="setUser" />
+
+  <template v-else>
+    <Header @logout="setUser" />
+
+    <Main />
+  </template>
 </template>

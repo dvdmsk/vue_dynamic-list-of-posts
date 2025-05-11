@@ -1,31 +1,92 @@
+<script setup>
+import { usePostsStore } from "@/store/storePosts";
+import Loader from "./loader/index.vue";
+import { onMounted, watch } from "vue";
+import { useUserStore } from "@/store/storeUser";
+import { storeToRefs } from "pinia";
+
+const postStore = usePostsStore();
+
+const { posts, isLoading, error, isCreating, selectedPost } =
+  storeToRefs(postStore);
+
+const { fetchPosts, setIsCreating, fetchPostById, setSelectedPost } =
+  usePostsStore();
+const { user } = useUserStore();
+
+onMounted(async () => {
+  await fetchPosts(user.id);
+});
+
+const handleSelect = async (post) => {
+  if (selectedPost.value?.id === post.id) {
+    setSelectedPost(null);
+    return;
+  }
+
+  await setSelectedPost(post);
+  await fetchPostById(post.id);
+};
+</script>
 <template>
-  <div className="tile is-parent">
-    <div className="tile is-child box is-success">
-      <div className="block">
-        <div className="block is-flex is-justify-content-space-between">
-          <p className="title">Posts</p>
-          <button type="button" className="button is-link">Add New Post</button>
+  <div
+    class="tile is-parent"
+    :class="{ 'is-child': !isCreating && !selectedPost }"
+  >
+    <div class="tile is-child box is-success">
+      <div class="block">
+        <div class="block is-flex is-justify-content-space-between">
+          <p class="title">Posts</p>
+          <button
+            type="button"
+            class="button is-link"
+            :class="{ 'is-light': isCreating }"
+            @click="setIsCreating(true)"
+          >
+            Add New Post
+          </button>
         </div>
 
-        <table className="table is-fullwidth is-striped is-hoverable is-narrow">
+        <div
+          class="is-flex is-justify-content-center is-align-items-center mt-2"
+        >
+          <Loader v-if="isLoading" />
+        </div>
+        <table
+          v-if="!isLoading && posts.length !== 0"
+          class="table is-fullwidth is-striped is-hoverable is-narrow"
+        >
           <thead>
-            <tr className="has-background-link-light">
+            <tr class="has-background-link-light">
               <th>ID</th>
               <th>Title</th>
-              <th className="has-text-right">Actions</th>
+              <th class="has-text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>id</td>
-              <td>title</td>
-              <td className="has-text-right is-vcentered">
-                <button type="button" className="button is-link">Open</button>
+            <tr v-for="post in posts" :key="post.id">
+              <td>{{ post.id }}</td>
+              <td>{{ post.title }}</td>
+              <td class="has-text-right is-vcentered">
+                <button
+                  type="button"
+                  class="button is-link"
+                  :class="{ 'is-light': selectedPost?.id !== post.id }"
+                  @click="handleSelect(post)"
+                >
+                  {{selectedPost?.id === post.id ? 'Close' : 'Open'}}
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
+
+        <h3 class="mt-2 has-text-centered" v-if="posts.length === 0">No posts yet.</h3>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+@import "./loader/index.css";
+</style>
