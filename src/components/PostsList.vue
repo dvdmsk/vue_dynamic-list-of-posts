@@ -71,17 +71,25 @@ const handleSelect = async (post) => {
                 <button
                   type="button"
                   class="button is-link"
-                  :class="{ 'is-light': selectedPost?.id !== post.id }"
+                  :class="{
+                    'is-light': selectedPost && selectedPost.id !== post.id,
+                  }"
                   @click="handleSelect(post)"
                 >
-                  {{selectedPost?.id === post.id ? 'Close' : 'Open'}}
+                  {{
+                    selectedPost && selectedPost.id === post.id
+                      ? "Close"
+                      : "Open"
+                  }}
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <h3 class="mt-2 has-text-centered" v-if="posts.length === 0">No posts yet.</h3>
+        <h3 class="mt-2 has-text-centered" v-if="posts.length === 0">
+          No posts yet.
+        </h3>
       </div>
     </div>
   </div>

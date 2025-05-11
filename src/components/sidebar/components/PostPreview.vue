@@ -64,7 +64,7 @@ const handleDelete = async () => {
       v-for="(comment, index) in comments"
       :key="comment.id"
       :comment="comment"
-      @delete="comments.splice(index, 1)"
+      @delete="comments = comments.filter(c => c.id !== comment.id)"
     />
 
     <div class="block" v-if="!isLoadingComment && comments.length === 0">

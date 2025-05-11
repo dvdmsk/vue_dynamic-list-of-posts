@@ -117,7 +117,7 @@ const handleSubmit = async () => {
             :class="[{ 'is-danger': errors.email }, {'is-loading': isLoadingComment}]"
           />
           <span class="icon is-small is-left">
-            <i class="fas fa-user fa-envelope"></i>
+            <i class="fa-envelope"></i>
           </span>
 
           <span
